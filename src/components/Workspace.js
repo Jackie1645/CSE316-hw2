@@ -11,6 +11,16 @@ class Workspace extends Component {
     constructor(props) {
         super(props);
     }
+    
+    handleNewItem = () => {
+        this.props.addNewItem();
+    }
+
+    handleRemoveItem = (mv) => {
+        let parent = mv.currentTarget.parentElement.parentElement;
+        let id = Number.parseInt( parent.id.split("-")[parent.id.split("-").length - 1] );
+        this.props.removeItem(id);
+    }
 
     render() {
         return (
@@ -22,9 +32,17 @@ class Workspace extends Component {
                     <div className="item-col" display="flex" flexDirection="row" flexWrap="nowrap">
                         <Undo id="undo-button" className="list-item-control material-icons todo-button" />
                         <Redo id="redo-button" className="list-item-control material-icons todo-button" />
-                        <AddBox id="add-item-button" className="list-item-control material-icons todo-button" />
-                        <Delete id="delete-list-button" className="list-item-control material-icons todo-button" />
-                        <Close id="close-list-button" className="list-item-control material-icons todo-button" />
+                        <AddBox 
+                            id="add-item-button" 
+                            className="list-item-control material-icons todo-button" 
+                            onClick = {this.handleNewItem}/>
+                        <Delete 
+                            id="delete-list-button" 
+                            className="list-item-control material-icons todo-button" />
+                        <Close 
+                            id="close-list-button" 
+                            className="list-item-control material-icons todo-button" 
+                            onClick={}/>
                     </div>
                 </div>
                 <div id="todo-list-items-div">
@@ -32,6 +50,7 @@ class Workspace extends Component {
                         this.props.toDoListItems.map((toDoListItem) => (
                         <ToDoItem
                             key={toDoListItem.id}
+                            deletion={this.handleRemoveItem}
                             toDoListItem={toDoListItem}     // PASS THE ITEM TO THE CHILDREN
                         />))
                     }

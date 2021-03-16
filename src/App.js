@@ -74,7 +74,7 @@ class App extends Component {
 
   addNewList = () => {
     let newToDoListInList = [this.makeNewToDoList()];
-    let newToDoListsList = [...newToDoListInList, ...this.state.toDoLists];
+    let newToDoListsList = [...this.state.toDoLists, ...newToDoListInList];
     let newToDoList = newToDoListInList[0];
 
     // AND SET THE STATE, WHICH SHOULD FORCE A render
@@ -96,11 +96,37 @@ class App extends Component {
 
   makeNewToDoListItem = () =>  {
     let newToDoListItem = {
+      id: this.state.nextListItemId,
       description: "No Description",
-      dueDate: "none",
+      due_date: "2000-01-01",
       status: "incomplete"
     };
     return newToDoListItem;
+  }
+
+  addItemtoList = () => {
+    let newItem = this.makeNewToDoListItem();
+    this.state.currentList.items.push(newItem);
+    console.log(newItem);
+    this.setState({
+      nextListItemId: this.state.nextListItemId + 1,
+      currentList: this.state.currentList
+    }, this.afterToDoListsChangeComplete);
+  }
+
+  deleteItem = (id) => {
+    let currItems = this.state.currentList.items.filter(item => item.id != id);
+    let newCurrList = this.state.currentList;
+    newCurrList.items = currItems;
+
+    this.setState({
+      currentList: newCurrList,
+    }, this.afterToDoListsChangeComplete);
+    
+  }
+
+  closeList = () => {
+    
   }
 
   // THIS IS A CALLBACK FUNCTION FOR AFTER AN EDIT TO A LIST
@@ -122,7 +148,11 @@ class App extends Component {
           loadToDoListCallback={this.loadToDoList}
           addNewListCallback={this.addNewList}
         />
-        <Workspace toDoListItems={items} />
+        <Workspace 
+          toDoListItems={items}
+          addNewItem={this.addItemtoList}
+          removeItem={this.deleteItem}
+          />
       </div>
     );
   }
