@@ -38,7 +38,7 @@ class ToDoItem extends Component {
                     <KeyboardArrowUp className='list-item-control todo-button' onClick={() => {this.props.itemUp(listItem.id);}} />
                     <KeyboardArrowDown className='list-item-control todo-button' onClick={() => {this.props.itemDown(listItem.id);}}/>
                     <Close className='list-item-control todo-button' 
-                    onClick={(task, date, status) => {this.props.deletion(listItem.id, task, date, status); this.forceUpdate();}}/>
+                    onClick={(task, date, status) => {this.props.deletion(listItem.id, listItem.description, listItem.due_date, listItem.status); this.forceUpdate();}}/>
                     <div className='list-item-control'></div>
         <div className='list-item-control'></div>
                 </div>

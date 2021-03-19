@@ -12,10 +12,19 @@ export default class DeleteItem_Transaction extends jsTPS_Transaction {
         this.dueDate = dueDate;
         this.status = status;
         this.state = state;
+        this.position = null;
+        this.pos = null;
+        this.curr = null;
     }
 
     doTransaction() {
-        console.log(this.id);
+        for (let i = 0; i < this.state.currentList.items.length; i++) {
+            if (this.state.currentList.items[i].id == this.id) {
+                this.position = i;
+                break;
+            }
+        }
+        
         let currItems = this.state.currentList.items.filter(item => item.id != this.id);
         console.log(currItems);
         let newCurrList = this.state.toDoLists;
@@ -27,11 +36,30 @@ export default class DeleteItem_Transaction extends jsTPS_Transaction {
     }
 
     undoTransaction() {
+        console.log(this.task);
+        console.log(this.dueDate);
+        console.log(this.status);
+        console.log(this.position);
         this.state.currentList.items.push({
             id: this.id,
             description: this.task,
             due_date: this.dueDate,
             status: this.status
         })
+        for (let i = 0; i < this.state.currentList.items.length; i++) {
+            if (this.state.currentList.items[i].id == this.id) {
+                this.curr = i;
+            }
+        }
+
+        while (this.position > this.curr) {
+            this.pos = this.state.currentList.items.map((ker) => ker.id == this.id).indexOf(true);
+            let first = this.state.currentList.items.slice(0, this.pos - 1);
+            let back = this.state.currentList.items.slice(this.pos + 1);
+            
+            this.state.currentList.items = first.concat(this.state.currentList.items[this.pos]).concat(this.state.currentList.items[this.pos - 1]).concat(back);
+            this.curr += 1;
+        }
+        console.log(this.curr);
     }
 }
