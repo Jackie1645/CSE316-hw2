@@ -17,6 +17,7 @@ export default class TaskDescription_Transaction extends jsTPS_Transaction {
 
     doTransaction() {
         let currElem = this.state.currentList.items[0];
+        console.log(currElem);
         for (let i = 0; i < this.state.currentList.items.length; i++) {
             if (this.state.currentList.items[i].id == this.id) {
                 currElem = this.state.currentList.items[i];
@@ -24,6 +25,7 @@ export default class TaskDescription_Transaction extends jsTPS_Transaction {
                 break;
             }
         }
+        console.log(currElem);
         this.prev = currElem.description;
         currElem.description = this.newText;
         this.state.currentList.items[this.loc] = currElem;

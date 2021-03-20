@@ -28,17 +28,26 @@ class ToDoItem extends Component {
         if (listItem.status === "incomplete")
             statusType = "status-incomplete";
 
+        //console.log(this.props.toDoListItem);
+        //console.log(this.props.firstItem);
+        //console.log(this.props.lastItem);
+
         return (
             <div id={'todo-list-item-' + listItem.id} className='list-item-card'>
                 <TaskDescription id = {listItem.id} listItem={listItem} changeDesc={(id, oldText, newText) => {this.props.changeDesc(id, oldText, newText); this.forceUpdate();}}/>
                 <ItemDate id = {listItem.id} listItem={listItem} changeDate={(id, oldDate, newDate) => {this.props.changeDate(id, oldDate, newDate); this.forceUpdate();}}/>
                 <ItemStatus id = {listItem.id} listItem={listItem} changeState={(id, oldState, newState) => {this.props.changeState(id, oldState, newState); this.forceUpdate();}}/>
-                <div className='item-col test-4-col'></div>
+
                 <div className='item-col list-controls-col'>
-                    <KeyboardArrowUp className='list-item-control todo-button' onClick={() => {this.props.itemUp(listItem.id);}} />
-                    <KeyboardArrowDown className='list-item-control todo-button' onClick={() => {this.props.itemDown(listItem.id);}}/>
+                    <KeyboardArrowUp className='list-item-control todo-button' 
+                        onClick={() => {this.props.itemUp(listItem.id);}} 
+                        style={this.props.firstItem ? {color:'rgb(144,144,144)'}: {color:''}}/>
+                    <KeyboardArrowDown 
+                        className='list-item-control todo-button' 
+                        onClick={() => {this.props.itemDown(listItem.id);}}
+                        style={this.props.lastItem ? {color:'rgb(144,144,144)'}: {color:''}}/>
                     <Close className='list-item-control todo-button' 
-                    onClick={(task, date, status) => {this.props.deletion(listItem.id, listItem.description, listItem.due_date, listItem.status); this.forceUpdate();}}/>
+                        onClick={() => {this.props.deletion(listItem.id, listItem.description, listItem.due_date, listItem.status); this.forceUpdate();}}/>
                     <div className='list-item-control'></div>
         <div className='list-item-control'></div>
                 </div>

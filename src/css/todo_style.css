@@ -71,8 +71,12 @@
 
 .list-item-card {
     border-bottom: solid;
-    border-width: 1px;
     font-weight: bold;
+    width: 97%;
+}
+
+.list-item-card:hover {
+    background-color: var(--swatch-complement);
 }
 
 .todo-list-button {

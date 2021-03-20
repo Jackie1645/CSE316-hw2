@@ -21,7 +21,8 @@ class LeftSidebar extends Component {
                         <AddBox 
                             id="add-list-button"
                             className="material-icons todo_button"
-                            onClick={this.handleAddNewList} />
+                            style={this.props.listOpen ? {color:'rgb(144,144,144)'}: {color:''}}
+                            onClick={!this.props.listOpen ? this.handleAddNewList : {}} />
                     </span>
                 </div>
                 <div id="todo-lists-list">
@@ -30,7 +31,8 @@ class LeftSidebar extends Component {
                         <ListLink
                             key={toDoList.id}
                             toDoList={toDoList}                                // PASS THE LIST TO THE CHILDREN
-                            loadToDoListCallback={this.props.loadToDoListCallback} />  // PASS THE CALLBACK TO THE CHILDREN
+                            loadToDoListCallback={this.props.loadToDoListCallback} 
+                            listSelected = {(toDoList.id == this.props.toDoLists[0].id) && this.props.listOpen}/>  // PASS THE CALLBACK TO THE CHILDREN
                     ))
                 }
                 </div>

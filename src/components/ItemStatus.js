@@ -46,8 +46,8 @@ class ItemStatus extends Component{
                         onMouseLeave = {this.unhover}
                     >
                     <select onChange={this.setStatus} onClick={() => {this.viewing = true}} name ="complete" id="status">
-                        <option style={{color:'#19c8ff'}} value = "complete" selected>complete</option>
-                        <option  style={{color:'rgb(255,200,25)'}} value = "incomplete">incomplete</option>
+                        <option style={{color:'#19c8ff', fontFamily:"Consolas"}} value = "complete" selected>complete</option>
+                        <option  style={{color:'rgb(255,200,25)', fontFamily:"Consolas"}} value = "incomplete">incomplete</option>
                     </select>
                     </div>
                 )
@@ -59,8 +59,8 @@ class ItemStatus extends Component{
                         onMouseLeave = {this.unhover}
                     >
                     <select onChange={this.setStatus} onClick={() => {this.viewing = true}} name ="complete" id="status">
-                        <option style={{color:'#19c8ff'}} value = "complete" >complete</option>
-                        <option style={{color:'rgb(255,200,25)'}} value = "incomplete"  selected>incomplete</option>
+                        <option style={{color:'#19c8ff',fontFamily:"Consolas"}} value = "complete" >complete</option>
+                        <option style={{color:'rgb(255,200,25)', fontFamily:"Consolas"}} value = "incomplete"  selected>incomplete</option>
                     </select>
                     </div>
                 )
@@ -71,7 +71,7 @@ class ItemStatus extends Component{
                 return(
                     <div
                         className = 'item-col status-col'
-                        onMouseLeave = {this.unhover}
+                        onMouseOver = {this.unhover}
                         style={{color:'#19c8ff'}}
                     >
                     {this.props.listItem.status}
@@ -83,7 +83,7 @@ class ItemStatus extends Component{
                 return(
                     <div
                         className = 'item-col status-col'
-                        onMouseLeave = {this.unhover}
+                        onMouseOver = {this.unhover}
                         style={{color:'rgb(255,200,25)'}}
                     >
                     {this.props.listItem.status}

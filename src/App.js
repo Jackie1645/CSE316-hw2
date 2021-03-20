@@ -30,7 +30,7 @@ class App extends Component {
     this.tps = new jsTPS();
 
     // CHECK TO SEE IF THERE IS DATA IN LOCAL STORAGE FOR THIS APP
-    let recentLists = localStorage.getItem("recentLists");
+    let recentLists = localStorage.getItem("toDoLists");
     //console.log("recentLists: " + recentLists);
     if (!recentLists) {
       recentLists = JSON.stringify(testData.toDoLists);
@@ -59,7 +59,8 @@ class App extends Component {
       currentList: {items: []},
       nextListId: highListId+1,
       nextListItemId: highListItemId+1,
-      useVerboseFeedback: true
+      useVerboseFeedback: true,
+      listOpen: false,
     }
 
     this.selectedList = -1;
@@ -79,7 +80,8 @@ class App extends Component {
     
     this.setState({
       toDoLists: nextLists,
-      currentList: toDoList
+      currentList: toDoList,
+      listOpen: true
     });
   }
 
@@ -92,7 +94,8 @@ class App extends Component {
     this.setState({
       toDoLists: newToDoListsList,
       currentList: newToDoList,
-      nextListId: this.state.nextListId+1
+      nextListId: this.state.nextListId+1,
+      listOpen: true
     }, this.afterToDoListsChangeComplete);
   }
 
@@ -139,7 +142,10 @@ class App extends Component {
   closeList = () => {
     this.setState({
       currentList: {items: []},
+      listOpen: false
     }, this.afterToDoListsChangeComplete);
+    this.tps.clearAllTransactions();
+    this.forceUpdate();
   }
 
   addItemTransaction = (task, date, status) => {
@@ -148,44 +154,58 @@ class App extends Component {
     this.setState({
       nextListItemId: this.state.nextListItemId + 1
     })
+    let toDoListsString = JSON.stringify(this.state.toDoLists);
+    localStorage.setItem("toDoLists", toDoListsString);
   }
 
   taskDescTransaction = (id, oldDesc, newDesc) => {
     let trans = new TaskDescription_Transaction(id, oldDesc, newDesc, this.state);
     this.tps.addTransaction(trans);
     this.forceUpdate();
+    let toDoListsString = JSON.stringify(this.state.toDoLists);
+    localStorage.setItem("toDoLists", toDoListsString);
   }
   
   dueDateTransaction = (id, oldDate, newDate) => {
     let trans = new DueDate_Transaction(id, oldDate, newDate, this.state);
     this.tps.addTransaction(trans);
     this.forceUpdate();
+    let toDoListsString = JSON.stringify(this.state.toDoLists);
+    localStorage.setItem("toDoLists", toDoListsString);
   }
 
   statusTransaction = (id, oldStatus, newStatus) => {
     let trans = new Status_Transaction(id, oldStatus, newStatus, this.state);
     this.tps.addTransaction(trans);
     this.forceUpdate();
+    let toDoListsString = JSON.stringify(this.state.toDoLists);
+    localStorage.setItem("toDoLists", toDoListsString);
   }
 
   itemUpTransaction = (id) => {
-    if (id <= 0) return;
+    if (this.state.currentList.items[0].id == id) return;
     let trans = new ItemUp_Transaction(id, this.state);
     this.tps.addTransaction(trans);
     this.forceUpdate();
+    let toDoListsString = JSON.stringify(this.state.toDoLists);
+    localStorage.setItem("toDoLists", toDoListsString);
   }
 
   itemDownTransaction = (id) => {
-    if (id >= this.state.currentList.items.length -1 ) return;
+    if (this.state.currentList.items[this.state.currentList.items.length -1].id == id) return;
     let trans = new ItemDown_Transaction(id, this.state);
     this.tps.addTransaction(trans);
     this.forceUpdate();
+    let toDoListsString = JSON.stringify(this.state.toDoLists);
+    localStorage.setItem("toDoLists", toDoListsString);
   }
 
   deleteItemTransaction = (id, task, date, status) => {
     let trans = new DeletionItem_Transaction(id, task, date, status, this.state);
     this.tps.addTransaction(trans);
     this.forceUpdate();
+    let toDoListsString = JSON.stringify(this.state.toDoLists);
+    localStorage.setItem("toDoLists", toDoListsString);
   }
 
   deleteList = () => {
@@ -197,7 +217,9 @@ class App extends Component {
 
     this.setState({
       toDoLists: newCurrList,
+      listOpen: false
     }, this.afterToDoListsChangeComplete);
+    this.tps.clearAllTransactions();
   }
 
   undo = () => {
@@ -205,6 +227,8 @@ class App extends Component {
       this.tps.undoTransaction();
     }
     this.forceUpdate();
+    let toDoListsString = JSON.stringify(this.state.toDoLists);
+    localStorage.setItem("toDoLists", toDoListsString);
   }
 
   redo = () => {
@@ -212,6 +236,8 @@ class App extends Component {
       this.tps.doTransaction();
     }
     this.forceUpdate();
+    let toDoListsString = JSON.stringify(this.state.toDoLists);
+    localStorage.setItem("toDoLists", toDoListsString);
   }
 
   // THIS IS A CALLBACK FUNCTION FOR AFTER AN EDIT TO A LIST
@@ -220,7 +246,7 @@ class App extends Component {
 
     // WILL THIS WORK? @todo
     let toDoListsString = JSON.stringify(this.state.toDoLists);
-    localStorage.setItem("recent_work", toDoListsString);
+    localStorage.setItem("toDoLists", toDoListsString);
   }
 
   render() {
@@ -233,6 +259,7 @@ class App extends Component {
           toDoLists={this.state.toDoLists}
           loadToDoListCallback={this.loadToDoList}
           addNewListCallback={this.addNewList}
+          listOpen ={this.state.listOpen}
         />
         <Workspace 
           toDoListItems={items}
@@ -246,6 +273,9 @@ class App extends Component {
           itemDown={this.itemDownTransaction}
           undo={this.undo}
           redo={this.redo}
+          hasUndo={this.tps.hasTransactionToUndo()}
+          hasRedo={this.tps.hasTransactionToRedo()}
+          listOpen ={this.state.listOpen}
           deleteList={this.deleteList}
           />
       </div>

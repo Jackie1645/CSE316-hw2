@@ -74,23 +74,28 @@ class Workspace extends Component {
                         <Undo 
                             id="undo-button" 
                             className="list-item-control material-icons todo-button" 
+                            style={!this.props.hasUndo ? {color:'rgb(144,144,144)'}: {color:''}}
                             onClick = {this.props.undo}/>
                         <Redo 
                             id="redo-button" 
                             className="list-item-control material-icons todo-button"
+                            style={!this.props.hasRedo ? {color:'rgb(144,144,144)'}: {color:''}}
                             onClick = {this.props.redo}/>
                         <AddBox 
                             id="add-item-button" 
-                            className="list-item-control material-icons todo-button" 
-                            onClick = {this.handleNewItem}/>
+                            className="list-item-control material-icons todo-button"
+                            style={!this.props.listOpen ? {color:'rgb(144,144,144)'}: {color:''}}
+                            onClick = {!this.props.listOpen ? {} : this.handleNewItem}/>
                         <Delete 
                             id="delete-list-button" 
                             className="list-item-control material-icons todo-button"
-                            onClick = {this.handleListDeletion} />
+                            style={!this.props.listOpen ? {color:'rgb(144,144,144)'}: {color:''}}
+                            onClick = {!this.props.listOpen ? {} : this.handleListDeletion} />
                         <Close 
                             id="close-list-button" 
                             className="list-item-control material-icons todo-button" 
-                            onClick={this.handleCloseList}/>
+                            style={!this.props.listOpen ? {color:'rgb(144,144,144)'}: {color:''}}
+                            onClick={!this.props.listOpen ? {} : this.handleCloseList}/>
                     </div>
                 </div>
                 <div id="todo-list-items-div">
@@ -105,6 +110,8 @@ class Workspace extends Component {
                             itemUp={this.handleItemUp}
                             itemDown={this.handleItemDown}
                             toDoListItem={toDoListItem}     // PASS THE ITEM TO THE CHILDREN
+                            firstItem={toDoListItem.id == this.props.toDoListItems[0].id}
+                            lastItem={toDoListItem.id == this.props.toDoListItems[this.props.toDoListItems.length - 1].id}
                         />))
                     }
                 </div>
