@@ -97,13 +97,13 @@ class App extends Component {
       toDoLists: newToDoListsList,
       currentList: newToDoList,
       nextListId: this.state.nextListId+1,
-      listOpen: true
+      listOpen: false
     }, this.afterToDoListsChangeComplete);
   }
 
   makeNewToDoList = () => {
     let newToDoList = {
-      id: this.highListId,
+      id: this.state.nextListId,
       name: 'Untitled',
       items: []
     };
