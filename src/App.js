@@ -14,6 +14,7 @@ import Status_Transaction from './components/Status_Transaction'
 import ItemUp_Transaction from './components/ItemUp_Transaction'
 import ItemDown_Transaction from './components/ItemDown_Transaction'
 import DeletionItem_Transaction from './components/DeletionItem_Transaction'
+import ModalDisplay from './components/ModalDisplay'
 {/*import ItemsListHeaderComponent from './components/ItemsListHeaderComponent'
 import ItemsListComponent from './components/ItemsListComponent'
 import ListsComponent from './components/ListsComponent'
@@ -61,6 +62,7 @@ class App extends Component {
       nextListItemId: highListItemId+1,
       useVerboseFeedback: true,
       listOpen: false,
+      deletingList: false
     }
 
     this.selectedList = -1;
@@ -217,7 +219,8 @@ class App extends Component {
 
     this.setState({
       toDoLists: newCurrList,
-      listOpen: false
+      listOpen: false,
+      deletingList: false
     }, this.afterToDoListsChangeComplete);
     this.tps.clearAllTransactions();
   }
@@ -249,12 +252,24 @@ class App extends Component {
     localStorage.setItem("toDoLists", toDoListsString);
   }
 
+  handleDeleteList = () => {
+    let undel = !this.state.deletingList;
+    this.setState({
+      deletingList: undel
+    })
+  }
+
   render() {
     let items = this.state.currentList.items;
     //console.log(this.state.toDoLists)
     return (
       <div id="root">
         <Navbar />
+        <ModalDisplay
+          handleDeleteListCallback={this.handleDeleteList}
+          deleteListCallback={this.deleteList}
+          deletingList={this.state.deletingList}
+        />
         <LeftSidebar 
           toDoLists={this.state.toDoLists}
           loadToDoListCallback={this.loadToDoList}
@@ -276,7 +291,7 @@ class App extends Component {
           hasUndo={this.tps.hasTransactionToUndo()}
           hasRedo={this.tps.hasTransactionToRedo()}
           listOpen ={this.state.listOpen}
-          deleteList={this.deleteList}
+          deleteList={this.handleDeleteList}
           />
       </div>
     );

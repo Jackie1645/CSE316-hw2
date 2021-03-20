@@ -1,31 +1,38 @@
 import React, { Component } from "react";
 
 class ModalDisplay extends Component{
-    constructor() {
-        super();
-        this.state = {
-          show: false
-        };
-        this.showModal = this.showModal.bind(this);
-        this.hideModal = this.hideModal.bind(this);
-      }
-    
-      showModal = () => {
-        this.setState({ show: true });
-      };
-    
-      hideModal = () => {
-        this.setState({ show: false });
-      };
+    constructor(props) {
+        super(props);
+    }
+
+    handleDeleteList = () => {
+      this.props.deleteListCallback();
+    }
+
+    handleDeleteModal = () => {
+      this.props.handleDeleteListCallback();
+    }
+
     render() {
-    return (
-      <main>
-        <h1>React Modal</h1>
-        <button type="button" onClick={this.showModal}>
-          Open
-        </button>
-      </main>
-    );
+      if (this.props.deletingList) {
+        return (
+          <div id="modal-overlay" class="modal-overlay">
+            <div id="modal" class="modal">
+              <div class="modal-header header">
+                <h3>Delete List?</h3>
+                <div id = "modal-close" onClick={this.handleDeleteModal} class="modal-close ripple">×</div>
+              </div>
+              <div class="modal-header">
+                  <div id="modal-confirm" onClick={this.handleDeleteList} class="modal-button ripple">Confirm</div>
+                  <div id="modal-cancel"  onClick={this.handleDeleteModal} class="modal-button ripple">Cancel</div>
+              </div>
+          </div>
+      </div>
+        )
+      }
+      else {
+        return null;
+      }
     }
 }
 export default ModalDisplay
